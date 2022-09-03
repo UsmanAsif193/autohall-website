@@ -1,88 +1,66 @@
-// // Carousel
-// const CarouselContainer = document.querySelectorAll("_2zQnf");
-// console.log(CarouselContainer);
-// // _3qDGo;
-
-// // for (let index = 0; index < CarouselContainer.length; index++) {
-// //   const element = CarouselContainer[index];
-// //   if(parent.)
-// // }
-
-// // const slides = document.querySelectorAll(".slide");
-
-// // loop through slides and set each slides translateX property to index * 100%
-// CarouselContainer.forEach((slide, indx) => {
-//   console.log(slide, "hello");
-//   slide.style.transform = `translateX(${indx * 100}%)`;
-// });
-
-// let curSlide = 0;
-
-// // select next slide button
-// const nextSlide = document.querySelector("._3mewk");
-
-// // add event listener and next slide functionality
-// nextSlide.addEventListener("click", function () {
-//   curSlide++;
-//   console.log("first");
-
-//   CarouselContainer.forEach((slide, indx) => {
-//     console.log(slide);
-//     slide.style.transform = `translateX(${100 * (indx - curSlide)}%)`;
-//   });
-// });
-
-"use strict";
-// Select all slides
 const slides = document.querySelectorAll("._3qDGo");
 const currentImageSpan = document.querySelector("._3iRvY");
 const currentImageDiv = currentImageSpan.querySelector("._1KEYJ");
 
-// loop through slides and set each slides translateX
-slides.forEach((slide, indx) => {
-  slide.style.transition = "all 0.5s";
-  slide.style.transform = `translateX(${indx * 100}%)`;
+$("._2zQnf").on("touchstart", function (event) {
+  console.log(event);
+  const xClick = event.originalEvent.touches[0].pageX;
+
+  $(this).on("touchmove", function (event) {
+    const xMove = event.originalEvent.touches[0].pageX;
+    const sensitivityInPx = 5;
+
+    if (Math.floor(xClick - xMove) > sensitivityInPx) {
+      plusSlides(1);
+      $(this).off("touchmove");
+    } else if (Math.floor(xClick - xMove) < -sensitivityInPx) {
+      plusSlides(-1);
+      $(this).off("touchmove");
+    }
+  });
 });
 
-// select next slide button
+let slideIndex = 1;
+showSlides(slideIndex);
+
+function plusSlides(n) {
+  showSlides((slideIndex += n));
+}
+
+function currentSlide(n) {
+  // currentImageDiv.innerHTML = curSlide + 1 + "/" + (maxSlide + 1);
+
+  showSlides((slideIndex = n));
+}
+
+function showSlides(n) {
+  let i;
+  let slides = document.getElementsByClassName("_3qDGo");
+
+  if (n > slides.length) {
+    slideIndex = 1;
+  }
+  if (n < 1) {
+    slideIndex = slides.length;
+  }
+
+  for (i = 0; i < slides.length; i++) {
+    slides[i].style.transition = "all 0.5s";
+
+    slides[i].style.display = "none";
+  }
+  currentImageDiv.innerHTML = slideIndex + " / " + slides.length;
+
+  slides[slideIndex - 1].style.display = "block";
+}
+
+const prevSlide = document.querySelector(".btn-prev");
 const nextSlide = document.querySelector(".btn-next");
 
-// current slide counter
-let curSlide = 0;
-// maximum number of slides
-let maxSlide = slides.length - 1;
-
-// add event listener and navigation functionality
-nextSlide.addEventListener("click", function () {
-  // check if current slide is the last and reset current slide
-  if (curSlide === maxSlide) {
-    curSlide = 0;
-  } else {
-    curSlide++;
-  }
-  currentImageDiv.innerHTML = curSlide + 1 + "/" + (maxSlide + 1);
-
-  //   move slide by -100%
-  slides.forEach((slide, indx) => {
-    slide.style.transform = `translateX(${100 * (indx - curSlide)}%)`;
-  });
-});
-
-// select next slide button
-const prevSlide = document.querySelector(".btn-prev");
 prevSlide.style.transform = "rotate(180deg)";
-// add event listener and navigation functionality
 prevSlide.addEventListener("click", function () {
-  // check if current slide is the first and reset current slide to last
-  if (curSlide === 0) {
-    curSlide = maxSlide;
-  } else {
-    curSlide--;
-  }
-  currentImageDiv.innerHTML = curSlide + 1 + "/" + (maxSlide + 1);
-
-  //   move slide by 100%
-  slides.forEach((slide, indx) => {
-    slide.style.transform = `translateX(${100 * (indx - curSlide)}%)`;
-  });
+  plusSlides(-1);
+});
+nextSlide.addEventListener("click", function () {
+  plusSlides(1);
 });
