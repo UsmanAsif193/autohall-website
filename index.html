@@ -210,6 +210,14 @@
     <article>
       <div class="_2Jksh" data-testid="vip-picture-gallery">
         <div class="_2zQnf _535lM">
+          <!-- Add More images here you can copy and paste this div tag. The class should always be _3qDGo -->
+          <!--   <div class="_3qDGo" data-testid="vip-picture-gallery-image-0" ">
+            <img class=" L2D2k _2I7D9"
+            src="https://img.classistatic.de/api/v1/mo-prod/images/09/0949c2b2-1416-4355-b33a-06519026dd8b?rule=mo-360.jpg"
+            srcset="
+                  https://img.classistatic.de/api/v1/mo-prod/images/09/0949c2b2-1416-4355-b33a-06519026dd8b?rule=mo-360.jpg   360w,
+                  https://img.classistatic.de/api/v1/mo-prod/images/09/0949c2b2-1416-4355-b33a-06519026dd8b?rule=mo-1024.jpg 1024w
+                " /> -->
           <div class="_3qDGo" data-testid="vip-picture-gallery-image-0" ">
             <img class=" L2D2k _2I7D9"
             src="https://img.classistatic.de/api/v1/mo-prod/images/09/0949c2b2-1416-4355-b33a-06519026dd8b?rule=mo-360.jpg"
@@ -1561,7 +1569,78 @@
   </footer>
   </div>
   <script async src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
-  <script src="script.js" type="text/javacsript"></script>
+  <script>
+    $(document).ready(function (e) {
+
+      const currentImageSpan = document.querySelector("._3iRvY");
+      const currentImageDiv = currentImageSpan.querySelector("._1KEYJ");
+
+      $("._2zQnf").on("touchstart", function (event) {
+        console.log(event);
+        const xClick = event.originalEvent.touches[0].pageX;
+
+        $(this).on("touchmove", function (event) {
+          const xMove = event.originalEvent.touches[0].pageX;
+          const sensitivityInPx = 5;
+
+          if (Math.floor(xClick - xMove) > sensitivityInPx) {
+            plusSlides(1);
+            $(this).off("touchmove");
+          } else if (Math.floor(xClick - xMove) < -sensitivityInPx) {
+            plusSlides(-1);
+            $(this).off("touchmove");
+          }
+        });
+      });
+
+      let slideIndex = 1;
+      showSlides(slideIndex);
+
+      function plusSlides(n) {
+        showSlides((slideIndex += n));
+      }
+
+      function currentSlide(n) {
+        // currentImageDiv.innerHTML = curSlide + 1 + "/" + (maxSlide + 1);
+
+        showSlides((slideIndex = n));
+      }
+
+      function showSlides(n) {
+        let i;
+        let slides = document.getElementsByClassName("_3qDGo");
+
+        if (n > slides.length) {
+          slideIndex = 1;
+        }
+        if (n < 1) {
+          slideIndex = slides.length;
+        }
+
+        for (i = 0; i < slides.length; i++) {
+          slides[i].style.transition = "all 0.5s";
+          slides[i].style.transform = `translateX(${100 * (i - slideIndex + 1)}%)`;
+        }
+        currentImageDiv.innerHTML = slideIndex + " / " + slides.length;
+
+        // slides[slideIndex - 1].style.transform = `translateX(${100 * (n - slideIndex)}%)`;
+
+        // slides[slideIndex - 1].style.display = "block";
+      }
+
+      const prevSlide = document.querySelector(".btn-prev");
+      const nextSlide = document.querySelector(".btn-next");
+
+      prevSlide.style.transform = "rotate(180deg)";
+      prevSlide.addEventListener("click", function () {
+        plusSlides(-1);
+      });
+      nextSlide.addEventListener("click", function () {
+        plusSlides(1);
+      });
+    });
+
+  </script>
 </body>
 
 </html>
